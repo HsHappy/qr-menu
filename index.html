@@ -159,6 +159,27 @@
             font-size: 1.5rem;
             border: 2px solid #eee;
         }
+
+        /* YENİ EKLENEN: Alt Bilgi (Footer) Alanı */
+        .menu-footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            color: #999;
+            font-size: 0.85rem;
+            background-color: #fff;
+        }
+        
+        .update-badge {
+            display: inline-block;
+            background-color: #f0f0f0;
+            padding: 5px 10px;
+            border-radius: 15px;
+            margin-top: 5px;
+            font-weight: 500;
+            color: var(--text-light);
+        }
     </style>
 </head>
 <body>
@@ -171,13 +192,23 @@
 
     <div class="menu-container" id="menuContainer"></div>
 
+    <footer class="menu-footer" id="menuFooter">
+        <div>Afiyet Olsun!</div>
+        <div class="update-badge" id="dateDisplay"></div>
+        <div>Fiyatlarımıza KDV dahildir.</div>
+    </footer>
+
     <script>
+        // --- AYARLAR ---
+        // Fiyatları değiştirdiğinde buradaki tarihi de güncelleyebilirsin.
+        const menuTarihi = "06 Kasım 2025"; 
+
         // Word dosyasından çıkarılan veriler
         const menuData = [
             {
                 "kategoriAdi": "Business Lunch",
                 "urunler": [
-                    { "urunAdi": "Et Menü", "aciklama": "Servis çalışanlarından sorunuz", "fiyat": 380 },
+                    { "urunAdi": "Et Menü", "aciklama": "Servis çalışanlarından sorunuz", "fiyat": 370 },
                     { "urunAdi": "Tavuk Menü", "aciklama": "Servis çalışanlarından sorunuz", "fiyat": 350 }
                 ]
             },
@@ -266,28 +297,28 @@
 
         const navContainer = document.getElementById('categoryNav');
         const menuContainer = document.getElementById('menuContainer');
+        const dateDisplay = document.getElementById('dateDisplay');
+
+        // Tarihi Ekrana Yazdır
+        dateDisplay.innerText = "Fiyat Değiştirme Tarihi: " + menuTarihi;
 
         function renderMenu() {
             menuData.forEach((kategori, index) => {
-                // 1. Navigasyon Butonlarını Oluştur
                 const navBtn = document.createElement('div');
                 navBtn.className = index === 0 ? 'nav-item active' : 'nav-item';
                 navBtn.innerText = kategori.kategoriAdi;
                 navBtn.onclick = () => scrollToCategory(index);
                 navContainer.appendChild(navBtn);
 
-                // 2. Kategori Bölümlerini Oluştur
                 const section = document.createElement('div');
                 section.className = 'category-section';
                 section.id = 'cat-' + index;
 
-                // Başlık
                 const title = document.createElement('div');
                 title.className = 'category-title';
                 title.innerText = kategori.kategoriAdi;
                 section.appendChild(title);
 
-                // Ürünler
                 kategori.urunler.forEach(urun => {
                     const card = document.createElement('div');
                     card.className = 'item-card';
@@ -308,13 +339,10 @@
             });
         }
 
-        // Tıklayınca o kategoriye kaydırma
         function scrollToCategory(index) {
-            // Aktif sınıfını güncelle
             document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.nav-item')[index].classList.add('active');
 
-            // Kaydır
             const element = document.getElementById('cat-' + index);
             const headerOffset = 130; 
             const elementPosition = element.getBoundingClientRect().top;
